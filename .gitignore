@@ -1,0 +1,10 @@
+# webstorm配置目录
+.idea
+
+# nodeJS配置
+node_modules
+package-lock.json
+
+# 版权原因隐藏
+resources/ext-651
+resources/ext-652

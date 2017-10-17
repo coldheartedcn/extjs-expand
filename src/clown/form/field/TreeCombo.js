@@ -28,9 +28,9 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
 
     /**
      * @cfg {Number} minPickerHeight
-     * 展现框最小高度，默认：100
+     * 展现框最小高度，默认：200
      */
-    minPickerHeight: 100,
+    minPickerHeight: 200,
 
     /**
      * @cfg {Boolean} multiSelect
@@ -122,6 +122,7 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
      */
     createPicker: function () {
         var me = this,
+            picker,
             store = me.store || new Ext.data.TreeStore({
                 root: {
                     expanded: true
@@ -135,20 +136,39 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
                         rootProperty: 'returnObject'
                     }
                 }
+            }),
+            bufferTime = (me.multiSelect === false && me.canSelectFolders === false) ? 300 : 0,
+            pickerCfg = Ext.apply({
+                xtype: 'treepanel',
+                id: me.id + '-picker',
+                floating: true,
+                hidden: true,
+                maxHeight: me.maxPickerHeight,
+                minHeight: me.minPickerHeight,
+                minWidth: 100,
+                useArrows: true,
+                store: store,
+                shadow: 'sides',
+                viewConfig: {
+                    toggleOnDblClick: false
+                },
+                renderTo: Ext.getBody(),
+                listeners: {
+                    scope: me,
+                    itemclick: {
+                        fn: me.onItemClick,
+                        buffer: bufferTime
+                    },
+                    // 关闭check框的事件
+                    beforecheckchange: function () {
+                        return false;
+                    }
+                }
             });
 
-        return new Ext.tree.Panel({
-            id: me.id + '-picker',
-            hidden: true,
-            minHeight: me.minPickerHeight,
-            maxHeight: me.maxPickerHeight,
-            useArrows: true,
-            store: store,
-            listeners: {
-                scope: me,
-                itemclick: me.onItemClick
-            }
-        });
+        picker = me.picker = Ext.widget(pickerCfg);
+
+        return picker;
     },
 
     /**
@@ -175,6 +195,32 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
         me.callParent(arguments);
     },
 
+    getSubmitValue: function () {
+        return this.value;
+    },
+
+    getSubTplData: function (fieldData) {
+        var me = this,
+            data, ariaAttr;
+
+        data = me.callParent([fieldData]);
+
+        if (!me.ariaStaticRoles[me.ariaRole]) {
+            ariaAttr = data.ariaElAttributes;
+
+            if (ariaAttr) {
+                ariaAttr['aria-owns'] = me.id + '-inputEl ' + me.id + '-picker-eventEl';
+                ariaAttr['aria-autocomplete'] = 'none';
+            }
+        }
+
+        return data;
+    },
+
+    getValue: function () {
+        return this.value;
+    },
+
     /**
      * @private
      * 触发item的click事件
@@ -186,7 +232,9 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
      * @param {Object} eOpts
      */
     onItemClick: function (view, record, item, index, e, eOpts) {
-        var me = this;
+        var me = this,
+            treePanel = me.getPicker(),
+            values = [];
 
         // 多选
         if (me.multiSelect === true) {
@@ -224,12 +272,15 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
 
                 me.records.push(record);
             } else { // 目录不可选且为目录，进行展开和合拢操作
-                if (record.isExpaneded() === true) {
+                treePanel.suspendEvent('itemclick');
+
+                if (record.isExpanded() === true) {
                     record.collapse();
                 } else {
                     record.expand();
                 }
 
+                treePanel.resumeEvent('itemclick');
                 return;
             }
         }
@@ -243,8 +294,8 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
         // 触发开发人员写的itemclick事件
         me.fireEvent('itemclick', me, record, item, index, me.records, values, e, eOpts);
 
-        if (me.multiselect == false) {
-            me.onTriggerClick();
+        if (me.multiSelect === false) {
+            me.collapse();
         }
     },
 
@@ -304,12 +355,57 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
 
         var me = this,
             treePanel = me.getPicker(),
-            values = valueInit.split(',');
+            root = treePanel.getRootNode(),
+            values = valueInit.split(','),
+            selects = [];
 
         if (treePanel.store.isLoaded() === false) {
             me.afterLoadSetValue = valueInit;
         }
 
+        // 初始化records，如此直接setValue赋值就不会和itemclick发生难以预料的数据异常
+        me.records = [];
+        if (me.multiSelect === true) {
+            me.traversalNode(root, values, selects);
 
+            me.setRawValue(selects.join(', '))
+        } else {
+            var record = root.findChild(me.valueField, valueInit, true);
+
+            if (record === null) {
+                Ext.Msg.alert('错误提醒', '没有值[' + valueInit + ']对应的选项');
+                return false;
+            } else if (me.canSelectFolders === false && record.get('leaf') === false) {
+                Ext.Msg.alert('错误提醒', '值[' + valueInit + ']对应的选项[' + record.get(me.displayField) + ']为目录');
+                return false;
+            } else {
+                me.records.push(record);
+                me.setRawValue(record.get(me.displayField));
+            }
+        }
+
+        me.value = valueInit;
+        me.checkChange();
+
+        return me;
+    },
+
+    traversalNode: function (node, values, selects) {
+        var me = this;
+
+        node.eachChild(function (child) {
+            if (Ext.Array.contains(values, child.get(me.valueField)) === true) {
+                child.set('checked', true);
+
+                selects.push(child.get(me.displayField));
+                me.records.push(child);
+            } else {
+                child.set('checked', false);
+            }
+
+            if (child.hasChildNodes() === true) {
+                me.traversalNode(child, values, selects);
+            }
+        });
     }
 });

@@ -1,0 +1,20 @@
+.x-menu-header {
+    z-index: 0 !important
+}
+
+.x-css-shadow {
+    box-shadow: none !important
+}
+
+.x-fa {
+    display: inline-block;
+    font: normal normal normal 14px/1 'Open Sans', 'Helvetica Neue', helvetica, arial, verdana, sans-serif
+}
+
+.alignRight {
+    float: right
+}
+
+.boldFont {
+    font-weight: bold
+}

@@ -1,0 +1,37 @@
+.error-page-container .error-page-inner-container {
+    margin-top: -50px
+}
+
+.error-page-container .x-window-body-default {
+    background-image: url('images/error-page-background.jpg');
+    background-size: cover;
+    color: #fff
+}
+
+.error-page-container.x-window-default {
+    border: none
+}
+
+.error-page-container .error-page-top-text {
+    font-size: 150px;
+    line-height: 150px
+}
+
+.error-page-container .error-page-bottom-text {
+    font-size: 18px
+}
+
+.error-page-container .error-page-desc {
+    line-height: 24px;
+    text-align: center;
+    font-size: 18px
+}
+
+.error-page-container .error-page-desc a {
+    color: #35baf6;
+    text-decoration: none
+}
+
+.error-page-container .error-page-desc a:hover {
+    text-decoration: underline
+}

@@ -1,0 +1,128 @@
+.big-100 {
+    width: calc(100% - 20px);
+    background-position: 100% 20px !important
+}
+
+.big-60 {
+    width: calc(60% - 20px);
+    background-position: 60% 20px !important
+}
+
+.big-50 {
+    width: calc(50% - 20px);
+    background-position: 50% 20px !important
+}
+
+.big-40 {
+    width: calc(40% - 20px);
+    background-position: 40% 20px !important
+}
+
+.big-33 {
+    width: calc(33.33% - 20px);
+    background-position: 33.33% 20px !important
+}
+
+.big-20 {
+    width: calc(20% - 20px);
+    background-position: 20% 20px !important
+}
+
+.x-responsivecolumn-small > .small-100 {
+    width: calc(100% - 20px);
+    background-position: 100% 20px !important
+}
+
+.x-responsivecolumn-small > .small-50 {
+    width: calc(50% - 20px);
+    background-position: 50% 20px !important
+}
+
+.sencha-logo {
+    background-color: #35baf6;
+    height: 65px;
+    font-size: 16px;
+    color: #fff;
+    margin-left: 17px
+}
+
+.sencha-logo .main-logo {
+    line-height: 65px
+}
+
+.sencha-logo .main-logo img {
+    margin-left: 22px;
+    margin-right: 22px;
+    top: 8px;
+    position: relative
+}
+
+.sencha-dash-dash-headerbar {
+    padding: 0 30px 0 0;
+    position: fixed;
+    width: 100%;
+    z-index: 10;
+    border: none
+}
+
+.sencha-dash-dash-headerbar .header-right-profile-image {
+    border-radius: 20px
+}
+
+.top-english-button .x-btn-icon-el {
+    width: 21px;
+    height: 14px
+}
+
+.collapsed .hot-icon:after, .collapsed .new-icon:after {
+    display: none
+}
+
+.collapsed .x-tree-elbow-img {
+    display: none
+}
+
+.collapsed .x-tree-node-text {
+    display: none
+}
+
+.x-grid-cell {
+    position: relative
+}
+
+.hot-icon.hot-icon:after, .new-icon.hot-icon:after {
+    content: "HOT";
+    background: #e3495a
+}
+
+.hot-icon.new-icon:after, .new-icon.new-icon:after {
+    content: "NEW";
+    background: #35baf6
+}
+
+.hot-icon:after, .new-icon:after {
+    height: 18px;
+    width: 34px;
+    display: inline-block;
+    position: absolute;
+    top: 22px;
+    right: -180px;
+    text-align: center;
+    color: #fff;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 18px
+}
+
+.x-treelist-item-tool {
+    height: 64px
+}
+
+.x-treelist-item-tool.hot-icon:after, .x-treelist-item-tool.new-icon:after {
+    background: #35baf6;
+    content: ''
+}
+
+.x-html-editor-input {
+    border: 1px solid #ccc
+}

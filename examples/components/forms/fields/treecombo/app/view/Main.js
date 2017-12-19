@@ -27,9 +27,19 @@ Ext.define('Treecombo.view.Main', {
                     title: '单选——默认配置',
                     items: [
                         {
+                            xtype: 'displayfield',
+                            anchor: '100%',
+                            value: '<font color=red>可以添加itemclick事件</font>'
+                        },
+                        {
                             xtype: 'treecombo',
                             anchor: '100%',
-                            store: 'NoCheckedTree'
+                            store: 'NoCheckedTree',
+                            listeners: {
+                                itemclick: function(view, record, item, index, records, values, e, eOpts) {
+                                    console.log(records.length);
+                                }
+                            },
                         },
                         {
                             xtype: 'container',
@@ -174,10 +184,16 @@ Ext.define('Treecombo.view.Main', {
                     title: '多选——默认配置',
                     items: [
                         {
+                            xtype: 'displayfield',
+                            anchor: '100%',
+                            value: '<font color=red>注意：setValue是不会触发联动效应</font>'
+                        },
+                        {
                             xtype: 'treecombo',
                             anchor: '100%',
                             store: 'CheckedTree',
-                            multiSelect: true
+                            multiSelect: true,
+                            emptyText: '所有分类'
                         },
                         {
                             xtype: 'container',
@@ -208,9 +224,11 @@ Ext.define('Treecombo.view.Main', {
                                     items: [
                                         {
                                             xtype: 'button',
-                                            itemId: 'setValue1',
                                             width: 100,
-                                            text: '赋 值'
+                                            text: '赋 值',
+                                            listeners: {
+                                                click: 'onSetValueClick'
+                                            }
                                         }
                                     ]
                                 },
@@ -225,9 +243,11 @@ Ext.define('Treecombo.view.Main', {
                                     items: [
                                         {
                                             xtype: 'button',
-                                            itemId: 'getValue1',
                                             width: 100,
-                                            text: '赋 值'
+                                            text: '获 取 值',
+                                            listeners: {
+                                                click: 'onGetValueClick'
+                                            }
                                         }
                                     ]
                                 },
@@ -241,11 +261,14 @@ Ext.define('Treecombo.view.Main', {
                 },
                 {
                     xtype: 'fieldset',
-                    title: '单选——默认配置',
+                    title: '多选——只选节点不联动',
                     items: [
                         {
-                            xtype: 'combobox',
-                            anchor: '100%'
+                            xtype: 'treecombo',
+                            anchor: '100%',
+                            store: 'CheckedTree',
+                            multiSelect: true,
+                            selectOnly: true
                         },
                         {
                             xtype: 'container',
@@ -276,9 +299,11 @@ Ext.define('Treecombo.view.Main', {
                                     items: [
                                         {
                                             xtype: 'button',
-                                            itemId: 'setValue1',
                                             width: 100,
-                                            text: '赋 值'
+                                            text: '赋 值',
+                                            listeners: {
+                                                click: 'onSetValueClick'
+                                            }
                                         }
                                     ]
                                 },
@@ -293,9 +318,11 @@ Ext.define('Treecombo.view.Main', {
                                     items: [
                                         {
                                             xtype: 'button',
-                                            itemId: 'getValue1',
                                             width: 100,
-                                            text: '赋 值'
+                                            text: '获 取 值',
+                                            listeners: {
+                                                click: 'onGetValueClick'
+                                            }
                                         }
                                     ]
                                 },

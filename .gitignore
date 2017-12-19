@@ -8,3 +8,6 @@ package-lock.json
 # 版权原因隐藏
 resources/ext-651
 resources/ext-652
+
+# build目录
+dist

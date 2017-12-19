@@ -1,0 +1,53 @@
+.x-treelist-nav .x-treelist-item-icon:before,
+.x-treelist-nav .x-treelist-item-tool:before,
+.x-treelist-nav .x-treelist-item-expander {
+    line-height: 64px
+}
+
+.x-treelist-nav .x-treelist-item-expander {
+    text-align: center;
+    background-repeat: no-repeat;
+    background-position: 0 center
+}
+
+.x-treelist-nav .x-treelist-item-icon,
+.x-treelist-nav .x-treelist-item-tool {
+    width: 48px;
+    line-height: 64px;
+    text-align: center
+}
+
+.x-treelist-nav .x-treelist-item-icon .x-treelist-item-icon-img,
+.x-treelist-nav .x-treelist-item-tool .x-treelist-item-tool-img {
+    width: 24px;
+    vertical-align: middle;
+}
+
+.x-treelist-nav .x-treelist-item-loading .x-treelist-item-icon {
+    background-image: url(images/tree/loading.gif);
+    color: transparent
+}
+
+.x-treelist-nav .x-treelist-item-icon, .x-treelist-nav .x-treelist-item-tool {
+    color: #adb3b8;
+    font-size: 18px;
+    width: 44px
+}
+
+.x-treelist-nav .x-treelist-item-expander {
+    color: #fff;
+    font-size: 16px;
+    width: 24px
+}
+
+.x-treelist-nav .x-treelist-item-hide-icon > * > * > .x-treelist-item-text {
+    margin-left: 50px;
+}
+
+.x-treelist-nav .x-treelist-item-text {
+    color: #adb3b8;
+    margin-left: 50px;
+    margin-right: 24px;
+    font-size: 14px;
+    line-height: 64px
+}

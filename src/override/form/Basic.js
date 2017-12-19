@@ -158,6 +158,32 @@ Ext.override(Ext.form.Basic, {
         });
 
         return flag;
+    },
+
+    /**
+     * nameList表示排除哪些field，可以为空
+     *
+     * @param readOnly
+     * @param nameList
+     */
+    setReadOnly: function (readOnly, nameList) {
+        var fields = this.getFields().items;
+
+        if (!Array.isArray(nameList)) {
+            if (Ext.isEmpty(nameList)) {
+                nameList = [];
+            } else {
+                console.error('传入参数必须为空或者是Array！');
+            }
+        }
+
+        if (Array.isArray(fields)) {
+            Ext.Array.each(fields, function (field) {
+                if (nameList.indexOf(field.getName()) < 0) {
+                    field.setReadOnly(readOnly);
+                }
+            })
+        }
     }
 
 });

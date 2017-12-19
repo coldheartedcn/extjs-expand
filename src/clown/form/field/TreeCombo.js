@@ -51,16 +51,34 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
     recursiveRecords: [],
 
     /**
-     * @cfg {Boolean} selectChildren
-     * 是否选择子节点，配合多选使用，默认：true
+     * @cfg {string} rootText
+     * 根目录名称
      */
-    selectChildren: true,
+    rootText: '',
+
+    /**
+     * @cfg {boolean} rootVisible
+     * 根目录是否显示
+     */
+    rootVisible: true,
+
+    /**
+     * @cfg {Boolean} selectOnly
+     * 是否只选择一个，不产生联动，配合多选使用，默认：false
+     */
+    selectOnly: false,
 
     /**
      * @cfg {Ext.data.TreeStore} store
      * 树型store配置，用于提供数据
      */
     store: null,
+
+    /**
+     * @cfg {String} url
+     * store数据的url访问地址
+     */
+    url: null,
 
     /**
      * @cfg {String} valueField
@@ -81,10 +99,9 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
      * @param {Object} eOpts
      */
 
-    //TODO 判断父节点
     /**
      * @private
-     *
+     * 多选时父子的联动
      * @param node
      */
     checkParentNodes: function (node) {
@@ -150,8 +167,10 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
                 store: store,
                 shadow: 'sides',
                 viewConfig: {
-                    toggleOnDblClick: false
+                    toggleOnDblClick: false,
+                    loadMask: true
                 },
+                rootVisible: me.rootVisible,
                 renderTo: Ext.getBody(),
                 listeners: {
                     scope: me,
@@ -159,6 +178,7 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
                         fn: me.onItemClick,
                         buffer: bufferTime
                     },
+                    load: me.onLoad,
                     // 关闭check框的事件
                     beforecheckchange: function () {
                         return false;
@@ -166,24 +186,16 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
                 }
             });
 
+        if (me.rootVisible === true && !Ext.isEmpty(me.rootText)) {
+            store.root.set(me.displayField, me.rootText);
+        }
+
         picker = me.picker = Ext.widget(pickerCfg);
+
+        //picker.mask(loadMsg);
 
         return picker;
     },
-
-    /**
-     * @private
-     * 添加itemclick事件
-     * @param config
-     */
-    /*constructor: function(config) {
-        this.addEvents({
-            "itemclick": true
-        });
-
-        this.listeners = config.listeners;
-        this.callParent(arguments);
-    },*/
 
     /**
      * @private
@@ -241,7 +253,7 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
             var checked = record.get('checked'),
                 values = [];
 
-            if (record.get('leaf') === true || me.selectChildren === false) {
+            if (record.get('leaf') === true || me.selectOnly === true) {
                 if (checked === true) {
                     Ext.Array.remove(me.records, record);
                 } else {
@@ -265,6 +277,10 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
                     me.recursiveRemove(record);
                 }
             }
+
+            if (me.selectOnly === false) {
+                me.checkParentNodes(record.parentNode);
+            }
         } else { //单选
             // 目录可选或者是叶子，直接赋值
             if (record.get('leaf') === true || me.canSelectFolders === true) {
@@ -272,15 +288,12 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
 
                 me.records.push(record);
             } else { // 目录不可选且为目录，进行展开和合拢操作
-                treePanel.suspendEvent('itemclick');
-
                 if (record.isExpanded() === true) {
                     record.collapse();
                 } else {
                     record.expand();
                 }
 
-                treePanel.resumeEvent('itemclick');
                 return;
             }
         }
@@ -300,6 +313,8 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
     },
 
     onLoad: function () {
+        var me = this;
+
         if (me.afterLoadSetValue != false) {
             me.setValue(me.afterLoadSetValue);
         }
@@ -355,12 +370,14 @@ Ext.define('Ext.clown.form.field.TreeCombo', {
 
         var me = this,
             treePanel = me.getPicker(),
+            store = treePanel.getStore(),
             root = treePanel.getRootNode(),
             values = valueInit.split(','),
             selects = [];
 
-        if (treePanel.store.isLoaded() === false) {
+        if (store.isLoaded() === false) {
             me.afterLoadSetValue = valueInit;
+            return;
         }
 
         // 初始化records，如此直接setValue赋值就不会和itemclick发生难以预料的数据异常

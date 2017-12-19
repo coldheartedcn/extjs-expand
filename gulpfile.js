@@ -27,21 +27,14 @@ gulp.task('concatHomeCss', function () {
 });
 
 gulp.task('concatCss', function () {
-    gulp.src(['css/common/**/*.css', 'css/classic/**/*.css'])
-        .pipe(concat('expand-classic-debug.css'))
-        .pipe(gulp.dest('dist'));
-    gulp.src(['css/common/**/*.css', 'css/modern/**/*.css'])
-        .pipe(concat('expand-modern-debug.css'))
+    gulp.src(['css/clown/**/*.css'])
+        .pipe(concat('expand-debug.css'))
         .pipe(gulp.dest('dist'));
 });
 
 gulp.task('minCss', function () {
     gulp.src(['dist/expand-classic-debug.css'])
         .pipe(cssmin())
-        .pipe(rename('expand-classic.css'))
-        .pipe(gulp.dest('dist'));
-    gulp.src(['dist/expand-modern-debug.css'])
-        .pipe(cssmin())
-        .pipe(rename('expand-modern.css'))
+        .pipe(rename('expand.css'))
         .pipe(gulp.dest('dist'));
 });

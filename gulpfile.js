@@ -33,7 +33,7 @@ gulp.task('concatCss', function () {
 });
 
 gulp.task('minCss', function () {
-    gulp.src(['dist/expand-classic-debug.css'])
+    gulp.src(['dist/expand-debug.css'])
         .pipe(cssmin())
         .pipe(rename('expand.css'))
         .pipe(gulp.dest('dist'));

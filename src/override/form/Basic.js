@@ -151,7 +151,7 @@ Ext.override(Ext.form.Basic, {
 
         me.getFields().each(function (field) {
             if (!field.isValid()) {
-                Ext.Msg.alert('输入有误', field.activeError);
+                Ext.toast('输入有误' + field.activeError);
                 flag = false;
                 return false;
             }

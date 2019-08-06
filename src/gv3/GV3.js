@@ -39,7 +39,7 @@ g_v3.form = function(option) {
                 myMask.hide();
                 delete myMask;
                 if (option.success !== undefined) {
-                    option.success.apply(option.scope, [ rsResponse, opts ]);
+                    option.success.apply(option.scope, [ rsResponse, o ]);
                 } else {
                     Ext.Msg.alert('提示', '执行成功');
                 }
